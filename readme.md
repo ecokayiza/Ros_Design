@@ -2,7 +2,7 @@
 ### 启动 Gazebo 并加载世界
 ```
 roslaunch ros_design build_world.launch
-export TURTLEBOT3_MODEL=burger
+export TURTLEBOT3_MODEL=waffle
 roslaunch ros_design build_map.launch
 ```
 ### 控制机器人建图
