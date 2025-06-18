@@ -12,6 +12,8 @@
     <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)">
       <param name="frame_id" value="map" />
     </node>
+    <!-- send goal -->
+    <node name="send_goal_node" pkg="ros_design" type="send_goal.py" output="screen"/>
     <!-- AMCL -->
     <include file="$(find ros_design)/params/amcl.launch"/>
     <!-- move_base -->
