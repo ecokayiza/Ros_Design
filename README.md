@@ -21,7 +21,7 @@ rosrun map_server map_saver -f $(rospack find ros_design)/maps/map
 roslaunch ros_design build_world.launch
 roslaunch ros_design turtlebot_navigation.launch
 ```
-
+# test
 ### 手柄遥控
 ```
 sudo apt-get install ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-teleop-twist-joy
