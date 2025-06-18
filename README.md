@@ -23,9 +23,11 @@ roslaunch ros_design turtlebot_navigation.launch
 ```
 
 ### 手柄遥控
+```
 sudo apt-get install ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-teleop-twist-joy
 插上手柄检测系统已识别
 ls /dev/input/js*
 启动节点
 roslaunch teleop_twist_joy teleop.launch
 (need little fix for its launch and config file)
+```
