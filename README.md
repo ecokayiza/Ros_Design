@@ -11,8 +11,9 @@ export TURTLEBOT3_MODEL=waffle
 ## 建图
 ```
 roslaunch ros_design build_world.launch
-
 roslaunch ros_design build_map.launch
+rosrun rqt_robot_steering rqt_robot_steering # rqt控制
+roslaunch teleop_twist_joy teleop.launch # 手柄遥控
 rosrun map_server map_saver -f $(rospack find ros_design)/maps/map
 ```
 
@@ -28,6 +29,5 @@ sudo apt-get install ros-${ROS_DISTRO}-joy ros-${ROS_DISTRO}-teleop-twist-joy
 插上手柄检测系统已识别
 ls /dev/input/js*
 启动节点(已写在build_world中)
-roslaunch teleop_twist_joy teleop.launch
 (need little fix for its launch and config file)
 ```
