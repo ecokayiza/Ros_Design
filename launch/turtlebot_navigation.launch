@@ -14,6 +14,9 @@
     </node>
     <!-- send goal -->
     <node name="send_goal_node" pkg="ros_design" type="send_goal.py" output="screen"/>
+    <!-- process image -->
+    <node name="get_image" pkg="ros_design" type="get_image.py"/>
+    <node name="process_image" pkg="ros_design" type="process_image.py"/>
     <!-- AMCL -->
     <include file="$(find ros_design)/params/amcl.launch"/>
     <!-- move_base -->
