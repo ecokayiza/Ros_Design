@@ -32,5 +32,20 @@ ls /dev/input/js*
 (need little fix for its launch and config file)
 ```
 
+catkin_make -DPYTHON_EXECUTABLE=/home/eco/miniconda3/bin/python
+### 摄像头
+```
+机器人模型配置目录
+roscd turtlebot3_description
+
+话题
+/camera/rgb/image_raw   /camera/depth_image_raw
+
+处理
+~/miniconda3/bin/python scripts/process_image.py
+/usr/bin/python scripts/get_image.py
+
+```
+
 ## Note
 vosk权重链接[vosk](https://alphacephei.com/vosk/models)(放在scripts/checkpoints)
