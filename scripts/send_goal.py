@@ -1,4 +1,4 @@
-#!/home/para/anaconda3/envs/anygrasp/bin/python
+#!/usr/bin/python
 import rospy
 from geometry_msgs.msg import PoseStamped
 from actionlib_msgs.msg import GoalStatusArray
