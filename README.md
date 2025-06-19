@@ -32,7 +32,6 @@ ls /dev/input/js*
 (need little fix for its launch and config file)
 ```
 
-catkin_make -DPYTHON_EXECUTABLE=/home/eco/miniconda3/bin/python
 ### 摄像头
 ```
 机器人模型配置目录
