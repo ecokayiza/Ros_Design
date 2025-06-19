@@ -1,4 +1,5 @@
-/.vscode/
+/.vscode
+/*/*/*/.vscode
 */__pycache__
 /*.wav
 /scripts/checkpoints/

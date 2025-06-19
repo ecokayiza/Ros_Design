@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/para/anaconda3/envs/anygrasp/bin/python
 # -*- coding: utf-8 -*-
 import rospy
 from sensor_msgs.msg import Image 
@@ -12,8 +12,16 @@ class ImageSender:
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.fps = fps
         self.last_send = 0
-        self.s.connect((host, port))
-
+        start_time = time.time()
+        while True:
+            try:
+                self.s.connect((host, port))
+                break
+            except Exception as e:
+                if time.time() - start_time > 10:
+                    raise RuntimeError(f"10秒内无法连接到 {host}:{port}") from e
+                time.sleep(1)
+                
     def send_image(self, data):
         now = time.time()
         if now - self.last_send < 1.0 / self.fps:
@@ -32,7 +40,7 @@ class ImageSender:
 
 def main():
     rospy.init_node('ros_tcp_sender')
-    sender = ImageSender('localhost', 8888)
+    sender = ImageSender('localhost', 8888)        
     rospy.Subscriber('/camera/rgb/image_raw', Image, sender.send_image)
     rospy.spin()
     sender.s.close()

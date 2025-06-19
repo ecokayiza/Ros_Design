@@ -1,0 +1,15 @@
+material Door/no104
+        {
+          receive_shadows on
+          technique
+          {
+            pass
+            {
+              ambient 1.0 1.0 1.0 1.0
+              texture_unit
+              {
+                texture 104.png
+              }
+            }
+          }
+        }

@@ -1,4 +1,4 @@
-#!/home/eco/miniconda3/bin/python
+#!/home/para/anaconda3/envs/anygrasp/bin/python
 import socket
 import struct
 import numpy as np
