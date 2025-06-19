@@ -31,3 +31,6 @@ ls /dev/input/js*
 启动节点(已写在build_world中)
 (need little fix for its launch and config file)
 ```
+
+## Note
+vosk权重链接[vosk](https://alphacephei.com/vosk/models)(放在scripts/checkpoints)
