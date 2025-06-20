@@ -53,27 +53,18 @@ def iou(box1, box2):
         return 0
     return inter_area / union_area
 
-if __name__ == "__main__":
-    image_path = "data/105-1.png"
-    image = cv2.imread(image_path)
-    if image is None:
-        raise FileNotFoundError(f"图像读取失败: {image_path}")
-
+def process_image(image,model):
     # 1. 找角点
     corners = get_rois(image)
+    if corners is None:
+        return ""
     print("Detected corners:", corners)
     # 2. 做透视变换
     warped = warp_perspective_by_corners(image, corners)
     warped_rgb = cv2.cvtColor(warped, cv2.COLOR_BGR2RGB)
     img = Image.fromarray(warped_rgb)
-    cv2.imshow("Warped", warped)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    # Load the model
-    model = YOLO("/home/para/catkin_ws/src/ros_design/scripts/checkpoints/svhn_best.pt")
-    # Get model results
     model_results = model(img) 
-    draw = ImageDraw.Draw(img)
+
 
     # Sort results based on the x-coordinate
     detected_objects = []
@@ -105,13 +96,82 @@ if __name__ == "__main__":
             selected_boxes.append(box)
         if len(selected_boxes) == 3:
             break
-
-    # 绘制并显示
+    numbers = []
     for box in selected_boxes:
         label_name = box["label"]
-        box_coords = box["xyxy"]
-        conf = box["conf"]
-        draw.rectangle(box_coords, outline="red")
-        draw.text((box_coords[0], box_coords[1] - 10), f"{label_name} {conf:.2f}", fill="red")
+        label_x = box["xyxy"][0]
+        numbers.append((label_name,label_x))
+    numbers.sort(key=lambda x: x[1])  # 按x坐标排序
+    numbers = [str(int(float(num[0])))  for num in numbers]  # 提取数字部分
+    if numbers[2] == '8':
+        numbers[2] = '3'
+    number_str = "".join(numbers)
+    return number_str
 
-    img.show()
+
+if __name__ == "__main__":
+
+    image_path = "data/105-1.png"
+    image = cv2.imread(image_path)
+    number_str = process_image(image, YOLO("/home/eco/catkin_ws/src/ros_design/scripts/checkpoints/svhn_best.pt"))
+    print("Recognized number:", number_str)
+
+    # if image is None:
+    #     raise FileNotFoundError(f"图像读取失败: {image_path}")
+
+    # # 1. 找角点
+    # corners = get_rois(image)
+    # print("Detected corners:", corners)
+    # # 2. 做透视变换
+    # warped = warp_perspective_by_corners(image, corners)
+    # warped_rgb = cv2.cvtColor(warped, cv2.COLOR_BGR2RGB)
+    # img = Image.fromarray(warped_rgb)
+    # cv2.imshow("Warped", warped)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    # # Load the model
+    # model = YOLO("/home/eco/catkin_ws/src/ros_design/scripts/checkpoints/svhn_best.pt")
+    # # Get model results
+    # model_results = model(img) 
+    # draw = ImageDraw.Draw(img)
+
+    # # Sort results based on the x-coordinate
+    # detected_objects = []
+    # captcha_result = ""
+    # boxes_data = []
+
+    # for result in model_results:
+    #     for box in result.boxes:
+    #         conf = float(box.conf.item())  # 获取置信度
+    #         box_data = {
+    #             "xyxy": box.xyxy[0].tolist(),
+    #             "label": str(box.cls.item()),
+    #             "conf": conf
+    #         }
+    #         boxes_data.append(box_data)
+
+    # sorted_boxes_data = sorted(boxes_data, key=lambda x: x['conf'], reverse=True)
+
+    # # 选择三个不重叠的box
+    # selected_boxes = []
+    # for box in sorted_boxes_data:
+    #     box_coords = box['xyxy']
+    #     overlap = False
+    #     for sel in selected_boxes:
+    #         if iou(box_coords, sel['xyxy']) > 0.1:  # IOU阈值可调整
+    #             overlap = True
+    #             break
+    #     if not overlap:
+    #         selected_boxes.append(box)
+    #     if len(selected_boxes) == 3:
+    #         break
+
+    # # 绘制并显示
+    # for box in selected_boxes:
+    #     label_name = box["label"]
+    #     box_coords = box["xyxy"]
+    #     conf = box["conf"]
+    #     draw.rectangle(box_coords, outline="red")
+    #     draw.text((box_coords[0], box_coords[1] - 10), f"{label_name} {conf:.2f}", fill="red")
+
+    # img.show()

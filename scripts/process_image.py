@@ -3,8 +3,9 @@ import socket
 import struct
 import numpy as np
 import cv2
-import pytesseract
 from ultralytics import YOLO
+from yolo_test import process_image
+
 # height: 1080
 # width: 1920
 # encoding: "rgb8"
@@ -33,12 +34,12 @@ def recv_all(conn, length):
     return data
 
 def main():
-    width, height, channels = 1280, 720, 3  
+    width, height, channels = 1920, 1080, 3  
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('localhost', 8888))
     s.listen(1)
     print("Python3 server listening on port 8888")
-    model = YOLO()  # 替换为实际的YOLO模型路径
+    model = YOLO("/home/eco/catkin_ws/src/ros_design/scripts/checkpoints/svhn_best.pt")
     while True:
         conn, addr = s.accept()
         print("Connected by", addr)
@@ -57,9 +58,10 @@ def main():
                 h_half = height // 2
                 w_quarter = width // 4
                 crop = img_np[0:h_half, w_quarter:width-w_quarter]
-                numbers,frame = recognize_number(model,crop)
-                
-                cv2.imshow('Image with OCR', frame)
+                number_str = process_image(crop,model)
+                if number_str.strip() != "":
+                    cv2.putText(crop, number_str, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                cv2.imshow('Image with OCR', crop)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break  # 按下 q 键退出循环
         except Exception as e:
