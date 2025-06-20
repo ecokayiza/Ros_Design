@@ -1,4 +1,4 @@
-image: /home/para/catkin_ws/src/ros_design/maps/map.pgm
+image: /home/eco/catkin_ws/src/ros_design/maps/map.pgm
 resolution: 0.050000
 origin: [-25.000000, -25.000000, 0.000000]
 negate: 0

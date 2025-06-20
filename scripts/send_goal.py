@@ -1,4 +1,5 @@
-#!/home/para/anaconda3/envs/anygrasp/bin/python
+
+#!usr/bin/python
 import os
 import rospy
 import json
