@@ -48,3 +48,9 @@ roscd turtlebot3_description
 
 ## Note
 vosk权重链接[vosk](https://alphacephei.com/vosk/models)(放在scripts/checkpoints)
+语音合成
+```
+sudo apt-get install espeak
+```
+tts权重连接[tts](https://coqui.gateway.scarf.sh/v0.6.1_models/tts_models--zh-CN--baker--tacotron2-DDC-GST.zip)(放在~/.local/share/tts)
+
