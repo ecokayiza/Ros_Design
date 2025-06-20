@@ -33,7 +33,7 @@ def recv_all(conn, length):
     return data
 
 def main():
-    width, height, channels = 1920, 1080, 3  
+    width, height, channels = 1280, 720, 3  
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('localhost', 8888))
     s.listen(1)
