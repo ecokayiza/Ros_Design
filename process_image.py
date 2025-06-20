@@ -1,28 +1,26 @@
 #!/home/para/anaconda3/envs/anygrasp/bin/python
-import os
 import socket
 import struct
 import numpy as np
 import cv2
-from ultralytics import YOLO
-from utils.yolo_detect import process_image
-
+import pytesseract
 # height: 1080
 # width: 1920
 # encoding: "rgb8"
 
 # number recog example
 # need to apt-get install tesseract-ocr
-py_folder = os.path.dirname(os.path.abspath(__file__))
-def recognize_number(model, frame):
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(gray, 50, 150, apertureSize=3)
-    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(frame, contours, -1, (0, 255, 0), 1)
-
-    numbers = []
-    number = "".join(numbers)
-    return number, frame
+def recognize_number(img):
+    # 灰度化
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    # 二值化
+    _, thresh = cv2.threshold(gray, 120, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    # OCR识别
+    config = '--psm 6 -c tessedit_char_whitelist=0123456789'
+    text = pytesseract.image_to_string(thresh, config=config)
+    # 只保留数字
+    number = ''.join(filter(str.isdigit, text))
+    return number
 
 
 def recv_all(conn, length):
@@ -35,12 +33,11 @@ def recv_all(conn, length):
     return data
 
 def main():
-    width, height, channels = 1920, 1080, 3  
+    width, height, channels = 1280, 720, 3  
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind(('localhost', 8888))
     s.listen(1)
     print("Python3 server listening on port 8888")
-    model = YOLO(os.path.join(py_folder, "checkpoints", "svhn_best.pt"))
     while True:
         conn, addr = s.accept()
         print("Connected by", addr)
@@ -52,17 +49,14 @@ def main():
                 frame_length = struct.unpack('!I', length_data)[0]
                 image_data = recv_all(conn, frame_length)
                 print("Received image frame of length:", frame_length)
-                
-                # 还原为numpy数组
+                # 还原为numpy数组并显示
                 img_np = np.frombuffer(image_data, dtype=np.uint8).reshape((height, width, channels)).copy()
-                # 裁剪
-                h_half = height // 2
-                w_quarter = width // 4
-                crop = img_np[0:h_half, w_quarter:width-w_quarter]
-                number_str = process_image(crop,model)
-                if number_str.strip() != "":
-                    cv2.putText(crop, number_str, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                cv2.imshow('Image with OCR', crop)
+                cv2.imshow('Image', img_np)
+                # OCR识别
+                number = recognize_number(img_np)
+                if number:
+                    # add to cv image
+                    cv2.putText(img_np, f'Number: {number}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break  # 按下 q 键退出循环
         except Exception as e:

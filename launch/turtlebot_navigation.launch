@@ -13,10 +13,14 @@
       <param name="frame_id" value="map" />
     </node>
     <!-- send goal -->
-    <node name="send_goal_node" pkg="ros_design" type="send_goal.py" output="screen"/>
+    <!-- <node name="send_goal_node" pkg="ros_design" type="send_goal.py" output="screen"/> -->
+    <!-- order system -->
+    <node name="order_system_node" pkg="ros_design" type="order_system.py" output="screen"/>
     <!-- process image -->
-    <node name="get_image" pkg="ros_design" type="get_image.py"/>
-    <node name="process_image" pkg="ros_design" type="process_image.py"/>
+    <!-- <node name="get_image" pkg="ros_design" type="get_image.py"/> -->
+    <!-- <node name="process_image" pkg="ros_design" type="process_image.py"/> -->
+    <!-- Kitchen -->
+    <node name="kitchen_node" pkg="ros_design" type="Kitchen.py" output="screen"/>
     <!-- AMCL -->
     <include file="$(find ros_design)/params/amcl.launch"/>
     <!-- move_base -->

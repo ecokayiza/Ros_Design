@@ -4,3 +4,5 @@
 /*.wav
 /scripts/checkpoints/
 /data
+/scripts/voice
+/scripts/utils/__pycache__
