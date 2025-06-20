@@ -27,7 +27,7 @@ class VoiceDetector:
         return res.get("text", "")
         
 if __name__ == "__main__":
-    audio_file = "/home/para/catkin_ws/src/ros_design/ttsmaker-file-2025-6-19-11-47-22.wav"
+    audio_file = "/home/para/catkin_ws/src/ros_design/output1.wav"
     detector = VoiceDetector(model_path)
     res1 = detector.recognize(audio_file)
     print("识别结果:", res1)
