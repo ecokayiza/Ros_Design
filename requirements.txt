@@ -1,0 +1,13 @@
+cv_bridge==1.16.2
+numpy==1.22.0
+opencv_python==4.6.0.66
+Pillow==8.4.0
+Pillow==11.2.1
+playsound==1.3.0
+rospy==1.17.0
+sensor_msgs==1.13.1
+tf==1.13.2
+TTS==0.22.0
+TTS==0.22.0
+ultralytics==8.3.156
+vosk==0.3.45

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/para/anaconda3/envs/anygrasp/bin/python
 # -*- coding: utf-8 -*-
 import rospy
 from sensor_msgs.msg import Image 

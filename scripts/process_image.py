@@ -1,10 +1,11 @@
 #!/home/para/anaconda3/envs/anygrasp/bin/python
+import os
 import socket
 import struct
 import numpy as np
 import cv2
 from ultralytics import YOLO
-from yolo_test import process_image
+from utils.yolo_detect import process_image
 
 # height: 1080
 # width: 1920
@@ -12,7 +13,7 @@ from yolo_test import process_image
 
 # number recog example
 # need to apt-get install tesseract-ocr
-
+py_folder = os.path.dirname(os.path.abspath(__file__))
 def recognize_number(model, frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(gray, 50, 150, apertureSize=3)
@@ -39,7 +40,7 @@ def main():
     s.bind(('localhost', 8888))
     s.listen(1)
     print("Python3 server listening on port 8888")
-    model = YOLO("/home/eco/catkin_ws/src/ros_design/scripts/checkpoints/svhn_best.pt")
+    model = YOLO(os.path.join(py_folder, "checkpoints", "svhn_best.pt"))
     while True:
         conn, addr = s.accept()
         print("Connected by", addr)
