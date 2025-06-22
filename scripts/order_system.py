@@ -25,14 +25,14 @@ class Order_System:
         rospy.Timer(rospy.Duration(30), self.consumer_order)  # 每30秒会有一个随机顾客下单
 
     def consumer_order(self, event):
-        consumer = random.choice(self.consumers)  # 随机选择一个顾客
-        self.order_dish(consumer)
+        room = random.choice(self.consumers)  # 随机选择一个顾客
+        self.order_dish(room)
         order_text = self.voice_detector.recognize(voice_file)  # 检测语音
         rospy.loginfo("音频识别结果: %s", order_text)
         order = parse_order_text(order_text, self.dishes)  # 解析订单文本
-        rospy.loginfo("%s 顾客要点单，解析内容为 %s", consumer, order)
+        rospy.loginfo("%s 顾客要点单，解析内容为 %s", room, order)
         msg = {
-            "consumer": consumer,
+            "room": room,
             "order": order
         }
         self.call_pub.publish(json.dumps(msg, ensure_ascii=False))

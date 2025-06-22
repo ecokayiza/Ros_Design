@@ -1,8 +1,8 @@
 /.vscode
 /*/*/*/.vscode
 */__pycache__
-/*.wav
+/scripts/voice/get.wav
+scripts/voice/order.wav
 /scripts/checkpoints/
 /data
-/scripts/voice
 /scripts/utils/__pycache__

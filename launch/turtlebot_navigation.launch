@@ -12,12 +12,12 @@
     <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)">
       <param name="frame_id" value="map" />
     </node>
-
     <!-- send goal -->
     <node name="send_goal_node" pkg="ros_design" type="send_goal.py" output="screen"/>
     <!-- order system -->
     <node name="order_system_node" pkg="ros_design" type="order_system.py" output="screen"/>
-
+    <!-- change color -->
+    <!-- <node name="change_color_node" pkg="ros_design" type="change_color.py" output="screen"/> -->
     <!-- process image -->
     <!-- <node name="get_image" pkg="ros_design" type="get_image.py"/> -->
     <!-- <node name="process_image" pkg="ros_design" type="process_image.py"/> -->

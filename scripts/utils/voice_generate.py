@@ -9,14 +9,10 @@ class VoiceGenerator:
 if __name__ == "__main__":
     from playsound import playsound
     voice_gen = VoiceGenerator()
-    text = "101房间想要1份咖啡, 2份蛋糕, 3份牛奶。"
-    file_path = "output1.wav"
-    voice_gen.generate_voice(text, file_path)
-    print(f"语音已生成并保存到 {file_path}")
-    text = "101房间想要1份咖啡。"
-    file_path = "output2.wav"
-    voice_gen.generate_voice(text, file_path)
-    print(f"语音已生成并保存到 {file_path}")
-    playsound("output1.wav")
-    playsound("output2.wav")
+    for text in ['101', '102', '103', '104', '105']:
+        text = f"{text}房间已送达。"
+        file_path = f"{text}.wav"
+        voice_gen.generate_voice(text, file_path)
+        print(f"语音已生成并保存到 {file_path}")
+
     

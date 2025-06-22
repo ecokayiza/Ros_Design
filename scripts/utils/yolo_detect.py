@@ -63,7 +63,7 @@ def process_image(image,model):
     warped = warp_perspective_by_corners(image, corners)
     warped_rgb = cv2.cvtColor(warped, cv2.COLOR_BGR2RGB)
     img = Image.fromarray(warped_rgb)
-    model_results = model(img) 
+    model_results = model(img, verbose=False)  # 获取模型结果
 
 
     # Sort results based on the x-coordinate
@@ -101,7 +101,7 @@ def process_image(image,model):
         label_name = box["label"]
         label_x = box["xyxy"][0]
         if label_name == "8.0":
-            label_name == "3.0"
+            label_name = "3.0"
         numbers.append((label_name,label_x))
     numbers.sort(key=lambda x: x[1])  # 按x坐标排序
     numbers = [str(int(float(num[0])))  for num in numbers]  # 提取数字部分
