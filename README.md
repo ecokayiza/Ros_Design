@@ -11,6 +11,18 @@ task:
 # 建议将解释器设为自己的conda环境
 pip install -r requirements.txt
 ```
+修改机器人模型配置
+```
+roscd turtlebot3_description
+```
+修改 urdf/turtlebot3_waffle.urdf.xacro 195行内容
+```
+<origin xyz="0.064 -0.065 0.094" rpy="0 -0.7854 0"/>
+```
+添加世界资源文件
+```
+cp -r models/* ~/.gazebo/models
+```
 涉及机器人的终端使用前
 ```
 export TURTLEBOT3_MODEL=waffle
@@ -40,11 +52,6 @@ roslaunch teleop_twist_joy teleop.launch # 手柄遥控
 
 ### 摄像头
 ```
-# 机器人模型配置目录
-roscd turtlebot3_description
-修改195行内容
-<origin xyz="0.064 -0.065 0.094" rpy="0 -0.7854 0"/>
-
 # 话题
 /camera/rgb/image_raw   /camera/depth_image_raw
 
