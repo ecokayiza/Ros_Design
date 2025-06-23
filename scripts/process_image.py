@@ -11,19 +11,7 @@ from utils.yolo_detect import process_image
 # width: 1920
 # encoding: "rgb8"
 
-# number recog example
-# need to apt-get install tesseract-ocr
 py_folder = os.path.dirname(os.path.abspath(__file__))
-def recognize_number(model, frame):
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(gray, 50, 150, apertureSize=3)
-    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(frame, contours, -1, (0, 255, 0), 1)
-
-    numbers = []
-    number = "".join(numbers)
-    return number, frame
-
 
 def recv_all(conn, length):
     data = b''
@@ -59,10 +47,12 @@ def main():
                 h_half = height // 2
                 w_quarter = width // 4
                 crop = img_np[0:h_half, w_quarter:width-w_quarter]
+
                 number_str = process_image(crop,model)
                 if number_str.strip() != "":
                     cv2.putText(crop, number_str, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv2.imshow('Image with OCR', crop)
+                
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break  # 按下 q 键退出循环
         except Exception as e:
