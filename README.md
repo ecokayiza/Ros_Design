@@ -39,6 +39,8 @@ rosrun map_server map_saver -f $(rospack find ros_design)/maps/map
 ```
 roslaunch ros_design build_world.launch
 roslaunch ros_design turtlebot_navigation.launch
+# 手机下单
+python scripts/order_tcp.py
 ```
 
 ### 手柄遥控
