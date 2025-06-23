@@ -65,7 +65,6 @@ def process_image(image,model):
     img = Image.fromarray(warped_rgb)
     model_results = model(img, verbose=False)  # 获取模型结果
 
-
     # Sort results based on the x-coordinate
     detected_objects = []
     captcha_result = ""
@@ -100,6 +99,7 @@ def process_image(image,model):
     for box in selected_boxes:
         label_name = box["label"]
         label_x = box["xyxy"][0]
+
         if label_name == "8.0":
             label_name = "3.0"
         numbers.append((label_name,label_x))

@@ -31,7 +31,6 @@ export TURTLEBOT3_MODEL=waffle
 ```
 roslaunch ros_design build_world.launch
 roslaunch ros_design build_map.launch
-rosrun rqt_robot_steering rqt_robot_steering # rqt控制
 roslaunch teleop_twist_joy teleop.launch # 手柄遥控
 rosrun map_server map_saver -f $(rospack find ros_design)/maps/map
 ```

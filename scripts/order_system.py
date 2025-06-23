@@ -26,8 +26,7 @@ class Order_System:
         rospy.Timer(rospy.Duration(30), self.consumer_order)  # 每30秒会有一个随机顾客下单
 
     def consumer_order(self, event):
-        room = random.choice(self.consumers)  # 随机选择一个顾客
-        self.order_dish(room)
+        room=self.order_dish()
         order_text = self.voice_detector.recognize(voice_file)  # 检测语音
         rospy.loginfo("音频识别结果: %s", order_text)
         order = parse_order_text(order_text, self.dishes)  # 解析订单文本
@@ -38,7 +37,10 @@ class Order_System:
         }
         self.call_pub.publish(json.dumps(msg, ensure_ascii=False))
     
-    def order_dish(self, room):
+
+
+    def order_dish(self):
+        room = random.choice(self.consumers)  # 随机选择一个顾客
         oreder_dishes = {'咖啡': 0, '牛奶': 0, '蛋糕': 0}  # 记录点的菜品数量
         # 假设随机选择三个菜品
         for _ in range(3):
@@ -53,6 +55,7 @@ class Order_System:
         order_text = f"{room}房间想要" + " ".join([f"{count} 份 {dish}," for dish, count in oreder_dishes.items() if count > 0]) + "。"
         self.voice_generator.generate_voice(order_text, voice_file)
         playsound(voice_file)
+        return room
             
 def flask_callback(msg):
     """
