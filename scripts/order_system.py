@@ -5,6 +5,7 @@ import rospy
 import json
 from std_msgs.msg import String
 from playsound import playsound
+import roslibpy
 from utils.voice_detect import VoiceDetector
 from utils.voice_generate import VoiceGenerator
 from utils.parse_text import parse_order_text
@@ -53,8 +54,21 @@ class Order_System:
         self.voice_generator.generate_voice(order_text, voice_file)
         playsound(voice_file)
             
+def flask_callback(msg):
+    """
+    Flask 端回调函数，接收订单信息并发布到 ROS 话题。
+    :param msg: 接收到的消息
+    """
+    rospy.loginfo("接收到 Flask 端订单: %s", msg.data)
+    try:
+        order_data = json.loads(msg.data)  # 假设消息是 JSON 格式
+        rospy.loginfo("flask传出数据: %s", order_data)
+        # order_system.call_pub.publish(json.dumps(order_data, ensure_ascii=False))
+    except json.JSONDecodeError as e:
+        rospy.logerr("JSON 解码错误: %s", e)
         
 if __name__ == '__main__':
     rospy.init_node('order_system_node')
+    rospy.Subscriber('/from_flask', String, flask_callback)  # 订阅订单消费者话题
     order_system = Order_System()
     rospy.spin()  # 保持节点运行，等待事件触发
