@@ -63,6 +63,7 @@ class Kitchen:
         order_data = json.loads(msg.data)
         order = order_data.get("order", {})
         room = order_data.get("room", "")
+        rospy.loginfo(f"厨房接收到{room}房间的订单: {order}")
         self.incompleted_bills.append((room, order))
             
 if __name__ == '__main__':

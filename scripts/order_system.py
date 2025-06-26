@@ -5,6 +5,7 @@ import rospy
 import json
 from std_msgs.msg import String
 from playsound import playsound
+import roslibpy
 from utils.voice_detect import VoiceDetector
 from utils.voice_generate import VoiceGenerator
 from utils.parse_text import parse_order_text
@@ -22,7 +23,7 @@ class Order_System:
         self.dishes = ['咖啡', '牛奶', '蛋糕', None]
         rospy.sleep(1)  # 等待发布者准备就绪
         rospy.loginfo("订单系统已启动")
-        rospy.Timer(rospy.Duration(30), self.consumer_order)  # 每30秒会有一个随机顾客下单
+        rospy.Timer(rospy.Duration(60), self.consumer_order)  # 每30秒会有一个随机顾客下单
 
     def consumer_order(self, event):
         room=self.order_dish()
@@ -35,8 +36,6 @@ class Order_System:
             "order": order
         }
         self.call_pub.publish(json.dumps(msg, ensure_ascii=False))
-    
-
 
     def order_dish(self):
         room = random.choice(self.consumers)  # 随机选择一个顾客
@@ -55,7 +54,6 @@ class Order_System:
         self.voice_generator.generate_voice(order_text, voice_file)
         playsound(voice_file)
         return room
-            
         
 if __name__ == '__main__':
     rospy.init_node('order_system_node')

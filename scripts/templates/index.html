@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>房间下单页面</title>
+    <style>
+        body { font-family: "微软雅黑", Arial, sans-serif; margin: 40px; }
+        .order-form { max-width: 400px; margin: auto; padding: 30px; border: 1px solid #eee; border-radius: 8px; }
+        .order-form h2 { text-align: center; margin-bottom: 20px; }
+        .btn-group { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .btn-group input[type="radio"],
+        .btn-group input[type="checkbox"] {
+            /* 隐藏原生选中框，但可聚焦，保证表单校验 */
+            opacity: 0;
+            position: absolute;
+            left: -9999px;
+            width: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .btn-group label {
+            /* 保持你已有的自定义按钮样式 */
+            flex: 1;
+            margin: 0 5px;
+            padding: 15px 0;
+            border: 2px solid #1e88e5;
+            border-radius: 6px;
+            background: #f5faff;
+            color: #1e88e5;
+            text-align: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .btn-group input[type="radio"]:checked + label,
+        .btn-group input[type="checkbox"]:checked + label {
+            background: #1e88e5;
+            color: #fff;
+            border-color: #1565c0;
+        }
+
+        .order-form button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 15px 0;
+            font-size: 20px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #1e88e5 0%, #42a5f5 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(30,136,229,0.15);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            cursor: pointer;
+            letter-spacing: 2px;
+        }
+        .order-form button:hover {
+            background: linear-gradient(90deg, #1565c0 0%, #1e88e5 100%);
+            box-shadow: 0 6px 18px rgba(30,136,229,0.25);
+            transform: translateY(-2px) scale(1.03);
+        }
+    </style>
+</head>
+<body>
+    <div class="order-form">
+        <div style="text-align:right;margin-bottom:10px;">
+            <span id="ros-status-indicator" style="display:inline-block;width:16px;height:16px;border-radius:50%;background:#ccc;vertical-align:middle;margin-right:6px;"></span>
+            <span id="ros-status-text" style="font-weight:bold;color:#666;">ROS状态：检测中...</span>
+        </div>
+        <h2>下达订单</h2>
+        <form id="rosOrderForm" method="post" action="{{ url_for('ros_order') }}">
+            <div>
+                <label style="font-weight:bold;">选择房间：</label>
+                <div class="btn-group" id="room-group">
+                    <input type="radio" id="room101" name="room" value="101" required>
+                    <label for="room101">101</label>
+                    <input type="radio" id="room102" name="room" value="102">
+                    <label for="room102">102</label>
+                    <input type="radio" id="room103" name="room" value="103">
+                    <label for="room103">103</label>
+                    <input type="radio" id="room104" name="room" value="104">
+                    <label for="room104">104</label>
+                    <input type="radio" id="room105" name="room" value="105">
+                    <label for="room105">105</label>
+                </div>
+            </div>
+            <div>
+                <label style="font-weight:bold;">选择菜品：</label>
+                <div class="btn-group" id="dish-group">
+                    <input type="checkbox" id="dish-coffee" name="dish" value="咖啡">
+                    <label for="dish-coffee">咖啡</label>
+                    <input type="checkbox" id="dish-milk" name="dish" value="牛奶">
+                    <label for="dish-milk">牛奶</label>
+                    <input type="checkbox" id="dish-cake" name="dish" value="蛋糕">
+                    <label for="dish-cake">蛋糕</label>
+                </div>
+            </div>
+            <button type="submit">下单</button>
+
+            <div id="result" style="margin-top:15px;color:rgb(165, 149, 76);"></div>
+        </form>
+
+    </div>
+    <script>
+        window.onload = function() {
+            // ROS状态检测
+            function checkRosStatus() {
+                fetch('{{ url_for('ros_status') }}').then(res => res.json())
+                .then(data => {
+                    var indicator = document.getElementById('ros-status-indicator');
+                    var text = document.getElementById('ros-status-text');
+                    if(data.online){
+                        indicator.style.background = '#4caf50';
+                        text.innerText = 'ROS状态：在线';
+                        text.style.color = '#4caf50';
+                    }else{
+                        indicator.style.background = '#f44336';
+                        text.innerText = 'ROS状态：离线';
+                        text.style.color = '#f44336';
+                    }
+                }).catch(()=>{
+                    var indicator = document.getElementById('ros-status-indicator');
+                    var text = document.getElementById('ros-status-text');
+                    indicator.style.background = '#ccc';
+                    text.innerText = 'ROS状态：检测失败';
+                    text.style.color = '#666';
+                });
+            }
+            checkRosStatus();
+            setInterval(checkRosStatus, 2000);
+
+            document.getElementById('rosOrderForm').onsubmit = function(e) {
+                e.preventDefault();
+                var form = this;
+                var data = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: data
+                }).then(res => res.text())
+                .then(msg => {
+                    var resultDiv = document.getElementById('result');
+                    resultDiv.innerText = msg;
+                    if (msg.includes('成功')) {
+                        resultDiv.style.color = 'green';
+                    } else {
+                        resultDiv.style.color = 'red';
+                    }
+                }).catch(() => {
+                    var resultDiv = document.getElementById('result');
+                    resultDiv.innerText = '下单失败，请重试';
+                    resultDiv.style.color = 'red';
+                });
+            }
+        }
+    </script>
+</body>
+</html>
